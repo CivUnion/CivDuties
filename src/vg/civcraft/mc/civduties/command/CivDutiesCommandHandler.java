@@ -1,13 +1,13 @@
-package vg.civcraft.mc.civduties.commands;
+package vg.civcraft.mc.civduties.command;
 
+import vg.civcraft.mc.civduties.command.commands.Duty;
 import vg.civcraft.mc.civmodcore.command.CommandHandler;
 
 public class CivDutiesCommandHandler extends CommandHandler{
 
 	@Override
 	public void registerCommands() {
-		// TODO Auto-generated method stub
-		
+		addCommands(new Duty("Duty"));	
 	}
 	
 }

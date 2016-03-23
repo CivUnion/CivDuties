@@ -1,6 +1,7 @@
 package vg.civcraft.mc.civduties.database;
 
 import vg.civcraft.mc.civduties.database.Database;
+import vg.civcraft.mc.civduties.managers.ConfigManager;
 import vg.civcraft.mc.civmodcore.Config;
 import vg.civcraft.mc.civmodcore.annotations.CivConfig;
 import vg.civcraft.mc.civmodcore.annotations.CivConfigType;
@@ -18,33 +19,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import vg.civcraft.mc.civduties.CivDuties;
 
 public class DatabaseManager {
-	private CivDuties plugin = CivDuties.getInstance();
-	private Config config;
+	private CivDuties plugin;
 	private Database db;
 	
-	private Map<UUID, ByteArrayInputStream> playerDataCache = new ConcurrentHashMap<UUID, ByteArrayInputStream>();
+	private Map<UUID, ByteArrayInputStream> playersDataCache = new ConcurrentHashMap<UUID, ByteArrayInputStream>();
 	private String addPlayerData, getPlayerData, removePlayerData;
 	
-	public DatabaseManager(){;
+	public DatabaseManager(){
+		plugin = CivDuties.getInstance();
 		if (!isValidConnection())
 			return;
 		loadPreparedStatements();
 		executeDatabaseStatements();
 	}
 	
-	@CivConfigs({
-		@CivConfig(name = "mysql.host", def = "localhost", type = CivConfigType.String),
-		@CivConfig(name = "mysql.port", def = "3306", type = CivConfigType.Int),
-		@CivConfig(name = "mysql.username", type = CivConfigType.String),
-		@CivConfig(name = "mysql.password", type = CivConfigType.String),
-		@CivConfig(name = "mysql.dbname", def = "DutiesDB", type = CivConfigType.String)
-	})
 	public boolean isValidConnection(){
-		String username = config.get("mysql.username").getString();
-		String host = config.get("mysql.host").getString();
-		int port = config.get("mysql.port").getInt();
-		String password = config.get("mysql.password").getString();
-		String dbname = config.get("mysql.dbname").getString();
+		String host = ConfigManager.getHostName();
+		int port = ConfigManager.getPort();
+		String dbname = ConfigManager.getDBName();
+		String username = ConfigManager.getUserName();	
+		String password = ConfigManager.getPassword();
 		db = new Database(host, port, dbname, username, password, plugin.getLogger());
 		return db.connect();
 	}
@@ -64,14 +58,14 @@ public class DatabaseManager {
 	}
 	
 	private void loadPreparedStatements(){
-		addPlayerData = "insert into createPlayerData(uuid, entity, serverName) values(?,?,?) on duplicate key update entity=values(entity), serverName=values(serverName);";
-		getPlayerData = "select * from createPlayerData where uuid = ?";
-		removePlayerData = "delete from createPlayerData where uuid = ?";
+		addPlayerData = "insert into DutiesPlayerData(uuid, entity, serverName) values(?,?,?) on duplicate key update entity=values(entity), serverName=values(serverName);";
+		getPlayerData = "select * from DutiesPlayerData where uuid = ?";
+		removePlayerData = "delete from DutiesPlayerData where uuid = ?";
 	}
 	
 	public void savePlayerData(UUID uuid, ByteArrayOutputStream output, String serverName) {
 		isConnected();
-		playerDataCache.remove(uuid); // So if it is loaded again it is recaught.
+		playersDataCache.remove(uuid); // So if it is loaded again it is recaught.
 		PreparedStatement addPlayerData = db.prepareStatement(this.addPlayerData);
 		try {
 			addPlayerData.setString(1, uuid.toString());
@@ -91,8 +85,8 @@ public class DatabaseManager {
 	public ByteArrayInputStream loadPlayerData(UUID uuid){
 		isConnected();
 		// Here we had it caches before hand so no need to load it again.
-		if (playerDataCache.containsKey(uuid))
-			return playerDataCache.get(uuid);
+		if (playersDataCache.containsKey(uuid))
+			return playersDataCache.get(uuid);
 		PreparedStatement getPlayerData = db.prepareStatement(this.getPlayerData);
 		try {
 			getPlayerData.setString(1, uuid.toString());

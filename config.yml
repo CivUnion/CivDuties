@@ -1,0 +1,14 @@
+Enable: true
+mysql:
+ hostname: 'localhost'
+ port: 3306
+ dbname: 'Minecraft'
+ username: 'root'
+ password: 1234
+Commands:
+ CommandsByPlayerOnEnable:
+  - gamemode 1
+  - clear
+ CommandsByPlayerOnDisable:
+  - gamemode 0
+

@@ -1,0 +1,10 @@
+name: ${project.name}
+main: vg.civcraft.mc.civduties.CivDuties
+version: ${project.version}
+softdepend: [Mercury, BetterShards]
+commands:
+   duty:
+      permission: civduties.*
+permissions:
+  civduties.*:
+   default: op
