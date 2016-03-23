@@ -72,8 +72,8 @@ public class ModeManager {
 			e.printStackTrace();
 			return false;
 		}
-		playersInDuty.add(player.getUniqueId());
 		db.removePlayerData(player.getUniqueId());
+		playersInDuty.remove(player.getUniqueId());
 		
 		executeCommands(player, ConfigManager.getCommandsByPlayerOnDisable(), player);
 		executeCommands(player, ConfigManager.getCommandsByConsoleOnDisable(), Bukkit.getConsoleSender());
