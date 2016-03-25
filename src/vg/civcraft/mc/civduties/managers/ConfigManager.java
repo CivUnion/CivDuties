@@ -1,5 +1,6 @@
 package vg.civcraft.mc.civduties.managers;
 
+import java.io.File;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,66 +11,80 @@ public class ConfigManager {
 	private static FileConfiguration config;
 
 	public ConfigManager(FileConfiguration config){
-		this.config = config;
-		CivDuties.getInstance().saveDefaultConfig();
-		CivDuties.getInstance().reloadConfig();
-	}
-
-	public static boolean isEnabled() {
-		return config.getBoolean("Enabled");
+		ConfigManager.config = config;
+		createConfig();
 	}
 	
 	public static String getHostName(){
-		return config.getString("mysql.hostname", "localhost");
+		return config.getString("mysql.hostname");
 	}
 	
 	public static int getPort(){
-		return config.getInt("mysql.port", 3306);
+		return config.getInt("mysql.port");
 	}
 	
 	public static String getDBName(){
-		return config.getString("mysql.dbname", "bukkit");
+		return config.getString("mysql.dbname");
 	}
 	
 	public static String getUserName(){
-		return config.getString("mysql.username", "bukkit");
+		return config.getString("mysql.username");
 	}
 	
 	public static String getPassword(){
-		return config.getString("mysql.password", "");
+		return config.getString("mysql.password");
 	}
 
 	
 	public static List<String> getCommandsByPlayerOnEnable() {
-		return config.getStringList("Commands.CommandsByPlayerOnEnable");
+		return config.getStringList("commands.commands_by_player_OnEnable");
+	}
+
+	public static List<String> getCommandsByPlayerOnDisable() {
+		return config.getStringList("commands.commands_by_player_onDisable");
 	}
 
 	public static List<String> getCommandsByConsoleOnEnable() {
-		return config.getStringList("Commands.CommandsByConsoleOnEnable");
+		return config.getStringList("commands.commands_by_console_onEnable");
 	}
 	
-	public static List<String> getCommandsByPlayerOnDisable() {
-		return config.getStringList("Commands.CommandsByPlayerOnDisable");
-	}
-
+	
 	public static List<String> getCommandsByConsoleOnDisable() {
-		return config.getStringList("Commands.CommandsByConsoleOnDisable");
+		return config.getStringList("commands.commands_by_console_onDisable");
+	}
+	
+	public static List<String> getTemporaryPermissions() {
+		return config.getStringList("permissions.temporary_permissions");
+	}
+	
+	public static List<String> getTemporaryGroups() {
+		return config.getStringList("permissions.temporary_groups");
+	}
+	
+	public static boolean isVaultEnabled() {
+		return config.getBoolean("vault.permissions");
 	}
 
 	public static boolean isDisableDeathDrops() {
-		return config.getBoolean("Actions.DisableDeathDrops");
+		return config.getBoolean("actions.disable_death_drops");
 	}
+	
+	private void createConfig() {
+        try {
+            if (!CivDuties.getInstance().getDataFolder().exists()) {
+            	CivDuties.getInstance().getDataFolder().mkdirs();
+            }
+            File file = new File(CivDuties.getInstance().getDataFolder(), "config.yml");
+            if (!file.exists()) {
+            	CivDuties.getInstance().getLogger().info("Config.yml not found, creating!");
+            	CivDuties.getInstance().saveDefaultConfig();
+            } else {
+                CivDuties.getInstance().getLogger().info("Config.yml found, loading!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
 
-	public static boolean isDisableKillDrops() {
-		return config.getBoolean("Actions.DisableKillDrops");
-	}
+        }
 
-	public static boolean isDenyDesiredDrops() {
-		return config.getBoolean("Actions.DenyDesiredDrops");
-	}
-
-	public static boolean isDenyChestInteracts() {
-		return config.getBoolean("Actions.DenyChestInteracts");
-	}
-    
+    }
 }

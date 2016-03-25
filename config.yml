@@ -1,14 +1,26 @@
-Enable: true
 mysql:
  hostname: 'localhost'
  port: 3306
- dbname: 'Minecraft'
- username: 'root'
- password: 1234
-Commands:
- CommandsByPlayerOnEnable:
+ dbname: 'bukkit'
+ username: 'bukkit'
+ password: ''
+commands:
+ commands_by_player_OnEnable:
   - gamemode 1
   - clear
- CommandsByPlayerOnDisable:
+ commands_by_player_onDisable:
   - gamemode 0
+ commands_by_console_onEnable:
+  - 
+ commands.commands_by_console_onDisable:
+  - 
+permissions:
+ temporary_permissions:
+  -
+ temporary_groups:
+  -
+vault:
+ permissions: true
+actions:
+ disable_death_drops: true
 

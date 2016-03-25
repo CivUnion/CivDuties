@@ -4,7 +4,7 @@
 
 	<groupId>vg.civcraft.mc</groupId>
 	<artifactId>CivDuties</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>CivDuties</name>
 	<url>https://github.com/Civcraft/CivDuties</url>
@@ -67,7 +67,13 @@
 		<dependency>
 			<groupId>vg.civcraft.mc.bettershards</groupId>
 			<artifactId>BetterShards</artifactId>
-			<version>1.3.24</version>
+			<version>1.3.72</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.milkbowl.vault</groupId>
+			<artifactId>VaultAPI</artifactId>
+			<version>1.5</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -79,6 +85,10 @@
 		<repository>
 			<id>civcraft-repo</id>
 			<url>http://build.civcraft.co:8080/plugin/repository/everything/</url>
+		</repository>
+		<repository>
+			<id>vault-repo</id>
+			<url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
 		</repository>
 	</repositories>
 </project>
