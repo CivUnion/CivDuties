@@ -75,9 +75,9 @@ public class ConfigManager {
             	CivDuties.getInstance().getDataFolder().mkdirs();
             }
             File file = new File(CivDuties.getInstance().getDataFolder(), "config.yml");
-            if (!file.exists()) {
+            if (!file.exists() || file.length() == 0) {
             	CivDuties.getInstance().getLogger().info("Config.yml not found, creating!");
-            	CivDuties.getInstance().saveDefaultConfig();
+            	CivDuties.getInstance().saveResource("config.yml", true);
             } else {
                 CivDuties.getInstance().getLogger().info("Config.yml found, loading!");
             }
