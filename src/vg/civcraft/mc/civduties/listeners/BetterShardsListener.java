@@ -3,6 +3,7 @@ package vg.civcraft.mc.civduties.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import vg.civcraft.mc.bettershards.events.PlayerChangeServerEvent;
 import vg.civcraft.mc.bettershards.events.PlayerArrivedChangeServerEvent;
@@ -10,7 +11,7 @@ import vg.civcraft.mc.civduties.managers.ConfigManager;
 import vg.civcraft.mc.civduties.managers.ModeManager;
 import vg.civcraft.mc.civduties.managers.VaultManager;
 
-public class BetterShardsListener {
+public class BetterShardsListener implements Listener{
 	@EventHandler
 	public void playerChangeServerEvent(PlayerChangeServerEvent event) {
 		Player player = Bukkit.getPlayer(event.getPlayerUUID());
