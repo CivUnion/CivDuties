@@ -13,12 +13,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import net.minecraft.server.v1_8_R3.NBTTagList;
+import net.minecraft.server.v1_9_R1.NBTCompressedStreamTools;
+import net.minecraft.server.v1_9_R1.NBTTagCompound;
+import net.minecraft.server.v1_9_R1.NBTTagList;
 import vg.civcraft.mc.bettershards.BetterShardsAPI;
 import vg.civcraft.mc.bettershards.events.PlayerChangeServerReason;
 import vg.civcraft.mc.bettershards.misc.PlayerStillDeadException;
@@ -99,7 +99,7 @@ public class ModeManager {
 			player.setGameMode(getGameModeByVaule(nbttagcompound.getInt("playerGameType")));
 			//Teleport the players using the bukkit api to avoid triggering nocheat movement detection
 			NBTTagList location = nbttagcompound.getList("Pos", 6);
-			player.teleport(new Location(player.getWorld(), location. d(0), location. d(1), location. d(2)));
+			player.teleport(new Location(player.getWorld(), location.c(0), location.c(1), location.c(2)));
 			CraftPlayer cPlayer = (CraftPlayer) player;
 			cPlayer.getHandle().f(nbttagcompound);
 		} catch (IOException e) {
