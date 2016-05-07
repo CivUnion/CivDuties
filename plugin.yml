@@ -1,6 +1,7 @@
 name: ${project.name}
 main: vg.civcraft.mc.civduties.CivDuties
 version: ${project.version}
+depend: [CivModCore]
 softdepend: [Mercury, BetterShards, Vault]
 commands:
    duty:

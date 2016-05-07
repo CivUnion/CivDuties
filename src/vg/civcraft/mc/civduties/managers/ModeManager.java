@@ -99,7 +99,7 @@ public class ModeManager {
 			player.setGameMode(getGameModeByVaule(nbttagcompound.getInt("playerGameType")));
 			//Teleport the players using the bukkit api to avoid triggering nocheat movement detection
 			NBTTagList location = nbttagcompound.getList("Pos", 6);
-			player.teleport(new Location(player.getWorld(), location.c(0), location.c(1), location.c(2)));
+			player.teleport(new Location(player.getWorld(), location.e(0), location.e(1), location.e(2)));
 			CraftPlayer cPlayer = (CraftPlayer) player;
 			cPlayer.getHandle().f(nbttagcompound);
 		} catch (IOException e) {
