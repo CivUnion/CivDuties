@@ -1,7 +1,6 @@
 package vg.civcraft.mc.civduties.database;
 
 import vg.civcraft.mc.civduties.database.Database;
-import vg.civcraft.mc.civduties.managers.ConfigManager;
 import vg.civcraft.mc.civmodcore.Config;
 import vg.civcraft.mc.civmodcore.annotations.CivConfig;
 import vg.civcraft.mc.civmodcore.annotations.CivConfigType;
@@ -17,16 +16,19 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import vg.civcraft.mc.civduties.CivDuties;
+import vg.civcraft.mc.civduties.configuration.ConfigManager;
 
 public class DatabaseManager {
 	private CivDuties plugin;
+	private ConfigManager config;
 	private Database db;
 
-	private Map<UUID, ByteArrayInputStream> playersDataCache = new ConcurrentHashMap<UUID, ByteArrayInputStream>();
-	private String addPlayerData, getPlayerData, removePlayerData, getPlayerServer;
+	private Map<UUID, PlayerData> playersDataCache = new ConcurrentHashMap<UUID, PlayerData>();
+	private String addPlayerData, getPlayerData, removePlayerData;
 
 	public DatabaseManager() {
 		plugin = CivDuties.getInstance();
+		config = CivDuties.getInstance().getConfigManager();
 		if (!isValidConnection())
 			return;
 		loadPreparedStatements();
@@ -34,11 +36,11 @@ public class DatabaseManager {
 	}
 
 	public boolean isValidConnection() {
-		String host = ConfigManager.getHostName();
-		int port = ConfigManager.getPort();
-		String dbname = ConfigManager.getDBName();
-		String username = ConfigManager.getUserName();
-		String password = ConfigManager.getPassword();
+		String host = config.getHostName();
+		int port = config.getPort();
+		String dbname = config.getDBName();
+		String username = config.getUserName();
+		String password = config.getPassword();
 		db = new Database(host, port, dbname, username, password, plugin.getLogger());
 		return db.connect();
 	}
@@ -50,18 +52,21 @@ public class DatabaseManager {
 	}
 
 	private void executeDatabaseStatements() {
-		db.execute("create table if not exists DutiesPlayerData(" + "uuid varchar(36) not null," + "entity blob,"
-				+ "serverName varchar(256) not null," + "primary key (uuid));");
+		db.execute("create table if not exists DutiesPlayerData( " 
+				+ "uuid varchar(36) not null," + "entity blob, "
+				+ "serverName varchar(256) not null, " 
+				+ "tierName varchar(256) not null, " 
+				+ "primary key (uuid));");
 	}
 
 	private void loadPreparedStatements() {
-		addPlayerData = "insert into DutiesPlayerData(uuid, entity, serverName) values(?,?,?) on duplicate key update entity=values(entity), serverName=values(serverName);";
-		getPlayerData = "select entity from DutiesPlayerData where uuid = ?";
+		addPlayerData = "insert into DutiesPlayerData(uuid, entity, serverName, tierName) values(?,?,?,?) "
+						+ "on duplicate key update entity=values(entity), serverName=values(serverName), tierName=values(tierName);";
+		getPlayerData = "select from DutiesPlayerData where uuid = ?";
 		removePlayerData = "delete from DutiesPlayerData where uuid = ?";
-		getPlayerServer = "select serverName from DutiesPlayerData where uuid = ?";
 	}
 
-	public void savePlayerData(UUID uuid, ByteArrayOutputStream output, String serverName) {
+	public void savePlayerData(UUID uuid, ByteArrayOutputStream output, String serverName, String tierName) {
 		isConnected();
 		playersDataCache.remove(uuid); // So if it is loaded again it is recaught
 		PreparedStatement addPlayerData = db.prepareStatement(this.addPlayerData);
@@ -69,6 +74,7 @@ public class DatabaseManager {
 			addPlayerData.setString(1, uuid.toString());
 			addPlayerData.setBytes(2, output.toByteArray());
 			addPlayerData.setString(3, serverName);
+			addPlayerData.setString(4, tierName);
 			addPlayerData.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -81,7 +87,7 @@ public class DatabaseManager {
 		}
 	}
 
-	public ByteArrayInputStream loadPlayerData(UUID uuid) {
+	public PlayerData getPlayerData(UUID uuid) {
 		isConnected();
 		// Here we had it caches before hand so no need to load it again.
 		if (playersDataCache.containsKey(uuid))
@@ -90,8 +96,12 @@ public class DatabaseManager {
 		try {
 			getPlayerData.setString(1, uuid.toString());
 			ResultSet set = getPlayerData.executeQuery();
-			if (set.next())
-				return new ByteArrayInputStream(set.getBytes("entity"));
+			if (set.next()) {
+				PlayerData data = new PlayerData(new ByteArrayInputStream(set.getBytes("entity")),
+						set.getString("serverName"), set.getString("tierName"));
+				playersDataCache.put(uuid, data);
+				return data;
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,6 +120,7 @@ public class DatabaseManager {
 		try {
 			removePlayerData.setString(1, uuid.toString());
 			removePlayerData.execute();
+			playersDataCache.remove(uuid);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,25 +130,5 @@ public class DatabaseManager {
 			} catch (Exception ex) {
 			}
 		}
-	}
-
-	public String getPlayerServer(UUID uuid) {
-		isConnected();
-		PreparedStatement getPlayerServer = db.prepareStatement(this.getPlayerServer);
-		try {
-			getPlayerServer.setString(1, uuid.toString());
-			ResultSet set = getPlayerServer.executeQuery();
-			if (set.next())
-				return set.getString("serverName");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				getPlayerServer.close();
-			} catch (Exception ex) {
-			}
-		}
-		return null;
 	}
 }

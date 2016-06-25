@@ -20,7 +20,6 @@ public class MercuryListener implements Listener{
 		if (data[0].equals("removeFromDuty")) {
 			UUID uuid = UUID.fromString(data[1]);
 			playersToRemoveFromDuty.put(uuid, System.currentTimeMillis());
-			System.out.println(3);
 		}
 	}
 	
