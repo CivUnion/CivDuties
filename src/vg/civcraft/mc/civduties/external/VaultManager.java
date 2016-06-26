@@ -1,9 +1,9 @@
-package vg.civcraft.mc.civduties.managers;
+package vg.civcraft.mc.civduties.external;
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import net.milkbowl.vault.permission.Permission;
@@ -14,56 +14,53 @@ public class VaultManager {
 	private static Permission permissionProvider = null;
 
 	public VaultManager() {
-		if (ConfigManager.isVaultEnabled() && CivDuties.isVaultEnabled()) {
+		if (CivDuties.getInstance().isVaultEnabled()) {
 			setupPermissions();
-			CivDuties.getInstance().getLogger().log(Level.WARNING, "Duties was unable to find a permissions plugin");
 		}
 	}
 
-	private static boolean setupPermissions() {
+	private boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> permissionProvider = CivDuties.getInstance().getServer()
 				.getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
 		if (permissionProvider != null) {
 			VaultManager.permissionProvider = permissionProvider.getProvider();
 			return true;
 		}
+		CivDuties.getInstance().getLogger().log(Level.WARNING, "Duties was unable to find a permissions plugin");
 		return false;
 	}
 
-	public static boolean addPermissionsToPlayer(Player player, List<String> permissions) {
+	public boolean addPermissionsToPlayer(Player player, Map<String, Boolean> permissions) {
 		if (permissionProvider == null) {
 			return false;
 		}
 		
-		for (String perm : permissions) {
-			permissionProvider.playerAdd(player, perm);
+		for (Map.Entry<String,Boolean> entry: permissions.entrySet()) {
+			if(entry.getValue()){
+				permissionProvider.playerAdd(player, entry.getKey());
+				return true;
+			}
+			permissionProvider.playerRemove(player, entry.getKey());
 		}
 		return true;
 	}
 	
-	public static boolean addPermissionsToPlayer(Player player, World world, List<String> permissions) {
+	public boolean removePermissionsFromPlayer(Player player, Map<String, Boolean> permissions) {
 		if (permissionProvider == null) {
 			return false;
 		}
 		
-		for (String perm : permissions) {
-			permissionProvider.playerAdd(player, perm);
+		for (Map.Entry<String,Boolean> entry: permissions.entrySet()) {
+			if(!entry.getValue()){
+				permissionProvider.playerAdd(player, entry.getKey());
+				return true;
+			}
+			permissionProvider.playerRemove(player, entry.getKey());
 		}
 		return true;
 	}
 	
-	public static boolean removePermissionsFromPlayer(Player player, List<String> permissions) {
-		if (permissionProvider == null) {
-			return false;
-		}
-		
-		for (String perm : permissions) {
-			permissionProvider.playerRemove(player, perm);
-		}
-		return true;
-	}
-	
-	public static boolean addPlayerToGroups(Player player, List<String> groups){
+	public boolean addPlayerToGroups(Player player, List<String> groups){
 		if (permissionProvider == null) {
 			return false;
 		}
@@ -74,7 +71,7 @@ public class VaultManager {
 		return true;
 	}
 	
-	public static boolean removePlayerFromGroups(Player player, List<String> groups){
+	public boolean removePlayerFromGroups(Player player, List<String> groups){
 		if (permissionProvider == null) {
 			return false;
 		}
