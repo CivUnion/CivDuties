@@ -26,43 +26,51 @@ public class Duty extends PlayerCommand{
 	}
 
 	public boolean execute(CommandSender sender, String[] args) {
-		if(!(sender instanceof Player)){
+		if (!(sender instanceof Player)) {
 			sender.sendMessage("No.");
 			return true;
 		}
 		Player player = (Player) sender;
 		Tier tier = null;
-		
-		if(args.length < 1){
-			tier = CivDuties.getInstance().getConfigManager().getTier(player);
-		} else {
-			tier = CivDuties.getInstance().getConfigManager().getTier(args[0]);
-		}
-		
-		if(tier == null){
-			player.sendMessage("You don't have permission to execute this command.");
-			return true;
-		}
-		
-		if (CivDuties.getInstance().isCombatTagPlusEnabled() && tier.isCombattagBlock()
-				&& ((CombatTagPlus) Bukkit.getPluginManager().getPlugin("CombatTagPlus")).getTagManager()
-						.isTagged(player.getUniqueId())) {
-			player.sendMessage("You can't enter duty mode while combat tagged");
-			return true;
-		}
-			
-		if(modeManager.isInDuty(player)){
-			modeManager.disableDutyMode(player, tier);
-			player.sendMessage(ChatColor.RED + "You have entered duty mode");
-		} else {
+
+		if (!modeManager.isInDuty(player)) {
+			if (args.length < 1) {
+				tier = CivDuties.getInstance().getConfigManager().getTier(player);
+			} else {
+				tier = CivDuties.getInstance().getConfigManager().getTier(args[0]);
+			}
+
+			if (tier == null) {
+				player.sendMessage("You don't have permission to execute this command.");
+				return true;
+			}
+
+			if (CivDuties.getInstance().isCombatTagPlusEnabled() && tier.isCombattagBlock()
+					&& ((CombatTagPlus) Bukkit.getPluginManager().getPlugin("CombatTagPlus")).getTagManager()
+							.isTagged(player.getUniqueId())) {
+				player.sendMessage("You can't enter duty mode while combat tagged");
+				return true;
+			}
 			modeManager.enableDutyMode(player, tier);
-			player.sendMessage(ChatColor.RED + "You have left duty mode");
+		} else {
+			String tierName = CivDuties.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId())
+					.getTierName();
+			tier = CivDuties.getInstance().getConfigManager().getTier(tierName);
+			modeManager.disableDutyMode(player, tier);
 		}
 		return true;
 	}
 
-	public List<String> tabComplete(CommandSender arg0, String[] arg1) {
-		// TODO Auto-generated method stub
+	public List<String> tabComplete(CommandSender sender, String[] args) {
+		if (!(sender instanceof Player)) {
+			sender.sendMessage("No.");
+			return null;
+		}
+		
+		if (args.length < 2) {
+			return CivDuties.getInstance().getConfigManager().getTiersNames((Player)sender);
+		}
+		
 		return null;
 	}
 	

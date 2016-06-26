@@ -38,7 +38,7 @@ public class PlayerListener implements Listener {
 			vaultManager.removePermissionsFromPlayer(player, tier.getTemporaryPermissions());
 			vaultManager.removePlayerFromGroups(player, tier.getTemporaryGroups());
 			for(Command command: tier.getCommands()){
-				if(command.getTiming() == Timing.LOGIN){
+				if(command.getTiming() == Timing.LOGOUT){
 					command.execute(player);
 				}
 			}
@@ -56,7 +56,7 @@ public class PlayerListener implements Listener {
 				return;
 			}
 			for(Command command: tier.getCommands()){
-				if(command.getTiming() == Timing.LOGOUT){
+				if(command.getTiming() == Timing.LOGIN){
 					command.execute(player);
 				}
 			}

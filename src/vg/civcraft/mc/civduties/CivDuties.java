@@ -34,8 +34,8 @@ public class CivDuties extends ACivMod {
 		super.onEnable();
 		config = new ConfigManager(this.getConfig());
 		db = new DatabaseManager();
-		modeManager = new ModeManager();
 		vaultManager = new VaultManager();
+		modeManager = new ModeManager();
 		CivDutiesCommandHandler commandHandler = new CivDutiesCommandHandler();
 		setCommandHandler(commandHandler);
 		commandHandler.registerCommands();

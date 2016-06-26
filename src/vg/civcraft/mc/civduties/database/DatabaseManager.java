@@ -62,7 +62,7 @@ public class DatabaseManager {
 	private void loadPreparedStatements() {
 		addPlayerData = "insert into DutiesPlayerData(uuid, entity, serverName, tierName) values(?,?,?,?) "
 						+ "on duplicate key update entity=values(entity), serverName=values(serverName), tierName=values(tierName);";
-		getPlayerData = "select from DutiesPlayerData where uuid = ?";
+		getPlayerData = "select * from DutiesPlayerData where uuid = ?";
 		removePlayerData = "delete from DutiesPlayerData where uuid = ?";
 	}
 

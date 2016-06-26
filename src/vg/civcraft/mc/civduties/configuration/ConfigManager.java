@@ -86,13 +86,16 @@ public class ConfigManager {
 			}
 			temporaryPermissions.put(array[0], true);
 		}
-		List<String> temporaryGroups = config.getStringList("temporary.groups");
+		List<String> temporaryGroups = config.getStringList("temporary.groups") == null ? new ArrayList<String>() : config.getStringList("temporary.groups");
 		boolean deathDrops = config.getBoolean("disable_death_drops");
 		boolean combattagBlock = config.getBoolean("enable_combattag_block");
 		return new Tier(name, priority, permission, commands, temporaryPermissions, temporaryGroups, deathDrops, combattagBlock);
 	}
 	
 	private List<Command> praseCommands(ConfigurationSection config){
+		if(config == null){
+			return new ArrayList<Command>();
+		}
 		List<Command> commands = new ArrayList<>();
 		for (String key : config.getKeys(false)) {
 			if (config.getConfigurationSection(key) == null) {
@@ -120,12 +123,13 @@ public class ConfigManager {
 		Tier tier = null;
 		int maxPriority = Integer.MIN_VALUE;
 		for(Tier t : tiers){
+			System.out.println(t.getPermission());
 			if((t.getPermission() == null || player.hasPermission(t.getPermission())) && (tier == null || t.getPriority() > maxPriority)){
 				tier = t;
 				maxPriority = t.getPriority();
 			}
 		}
-		return null;
+		return tier;
 	}
 	
 	public Tier getTier(String tierName){
@@ -135,6 +139,16 @@ public class ConfigManager {
 			}
 		}
 		return null;
+	}
+	
+	public List<String> getTiersNames(Player player){
+		List<String> names = new ArrayList<String>();
+		for(Tier tier : tiers){
+			if(tier.getPermission() == null || player.hasPermission(tier.getPermission())){
+				names.add(tier.getName());
+			}
+		}
+		return names;
 	}
 	
 	public String getHostName(){

@@ -22,7 +22,6 @@ import vg.civcraft.mc.bettershards.events.PlayerChangeServerReason;
 import vg.civcraft.mc.bettershards.misc.PlayerStillDeadException;
 import vg.civcraft.mc.civduties.configuration.Command;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
-import vg.civcraft.mc.civduties.configuration.ConfigManager;
 import vg.civcraft.mc.civduties.configuration.Tier;
 import vg.civcraft.mc.civduties.database.DatabaseManager;
 import vg.civcraft.mc.civduties.external.VaultManager;
@@ -67,6 +66,7 @@ public class ModeManager {
 		if(CivDuties.getInstance().isMercuryEnabled()){
 			serverName = MercuryAPI.serverName();
 		}
+		
 		db.savePlayerData(player.getUniqueId(), output, serverName, tier.getName());
 		
 		vaultManager.addPermissionsToPlayer(player, tier.getTemporaryPermissions());

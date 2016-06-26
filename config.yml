@@ -1,10 +1,3 @@
-mysql:
- hostname: 'localhost'
- port: 3306
- dbname: 'bukkit'
- username: 'bukkit'
- password: ''
- 
 #An example for a tier utilizing all the options available
 
 #name:
@@ -33,6 +26,7 @@ mysql:
 #    enable_combattag_block: true
 
 #permission specifies the permission required the player to have to be able to use the tier. 
+#priority if a player has permissions to more than one tier his default tier will be the tier with the highest priority.
 #commands allows to run commands.
 #    syntax the command to run.
 #    timing when to run the command. Can be ENABLE, DISABLE, LOGIN or LOGOUT.
@@ -46,6 +40,10 @@ tiers:
        priority: 0
        disable_death_drops: true
        enable_combattag_block: true
-      
-			
-		
+
+mysql:
+ hostname: 'localhost'
+ port: 3306
+ dbname: 'bukkit'
+ username: 'bukkit'
+ password: ''
