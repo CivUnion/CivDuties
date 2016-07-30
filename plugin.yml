@@ -5,7 +5,7 @@ depend: [CivModCore]
 softdepend: [Mercury, BetterShards, Vault]
 commands:
    duty:
-      permission: civduties.*
+      permission: civduties.duty
 permissions:
-  civduties.*:
+  civduties.duty:
    default: op
