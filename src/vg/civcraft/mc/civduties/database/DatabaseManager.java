@@ -131,4 +131,8 @@ public class DatabaseManager {
 			}
 		}
 	}
+	
+	public void clearCache(UUID uuid){
+		playersDataCache.remove(uuid);
+	}
 }

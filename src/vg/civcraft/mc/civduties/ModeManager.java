@@ -91,6 +91,14 @@ public class ModeManager {
 		if(CivDuties.getInstance().isBetterShardsEnabled() && CivDuties.getInstance().isMercuryEnabled()){
 			String serverName = db.getPlayerData(player.getUniqueId()).getServerName();
 			if(!MercuryAPI.serverName().equals(serverName)){
+				/**
+				 * We want to remove the permissions here before sending the
+				 * player to the new server to ensure the cache isn't been
+				 * removed by the login listener on the new server before the
+				 * quit event on the current server is fired.
+				 */
+				vaultManager.removePermissionsFromPlayer(player, tier.getTemporaryPermissions());
+				vaultManager.removePlayerFromGroups(player, tier.getTemporaryGroups());
 				MercuryAPI.sendMessage(serverName, "removeFromDuty|"+ player.getUniqueId().toString(), "Duties");
 				try {
 					BetterShardsAPI.connectPlayer(player, serverName, PlayerChangeServerReason.PLUGIN);
@@ -115,7 +123,11 @@ public class ModeManager {
 			e.printStackTrace();
 			return false;
 		}
+		
 		db.removePlayerData(player.getUniqueId());
+		if(CivDuties.getInstance().isMercuryEnabled()){
+			MercuryAPI.sendGlobalMessage("cache|clear|"+ player.getUniqueId().toString(), "Duties");
+		}
 		
 		for(Command command: tier.getCommands()){
 			if(command.getTiming() == Timing.DISABLE){
