@@ -1,11 +1,6 @@
 package vg.civcraft.mc.civduties.database;
 
 import vg.civcraft.mc.civduties.database.Database;
-import vg.civcraft.mc.civmodcore.Config;
-import vg.civcraft.mc.civmodcore.annotations.CivConfig;
-import vg.civcraft.mc.civmodcore.annotations.CivConfigType;
-import vg.civcraft.mc.civmodcore.annotations.CivConfigs;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.sql.PreparedStatement;

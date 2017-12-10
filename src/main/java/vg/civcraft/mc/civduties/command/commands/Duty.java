@@ -6,8 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.minelink.ctplus.CombatTagPlus;
 import vg.civcraft.mc.civduties.CivDuties;
 import vg.civcraft.mc.civduties.ModeManager;

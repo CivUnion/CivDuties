@@ -5,15 +5,13 @@ import org.bukkit.entity.Player;
 
 import vg.civcraft.mc.civduties.command.CivDutiesCommandHandler;
 import vg.civcraft.mc.civduties.configuration.Command;
+import vg.civcraft.mc.civduties.configuration.Command.Timing;
 import vg.civcraft.mc.civduties.configuration.ConfigManager;
 import vg.civcraft.mc.civduties.configuration.Tier;
-import vg.civcraft.mc.civduties.configuration.Command.Timing;
 import vg.civcraft.mc.civduties.database.DatabaseManager;
 import vg.civcraft.mc.civduties.external.VaultManager;
-import vg.civcraft.mc.civduties.listeners.MercuryListener;
 import vg.civcraft.mc.civduties.listeners.PlayerListener;
 import vg.civcraft.mc.civmodcore.ACivMod;
-import vg.civcraft.mc.mercury.MercuryAPI;
 
 public class CivDuties extends ACivMod {
 	private static CivDuties pluginInstance;
@@ -76,14 +74,6 @@ public class CivDuties extends ACivMod {
 	public VaultManager getVaultManager() {
 		return vaultManager;
 	}
-
-	public boolean isMercuryEnabled() {
-		return Bukkit.getPluginManager().isPluginEnabled("Mercury");
-	}
-
-	public boolean isBetterShardsEnabled() {
-		return Bukkit.getPluginManager().isPluginEnabled("BetterShards");
-	}
 	
 	public boolean isVaultEnabled() {
 		return Bukkit.getPluginManager().isPluginEnabled("Vault");
@@ -96,9 +86,5 @@ public class CivDuties extends ACivMod {
 
 	private void registerListeners() {
 		getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-		if (isMercuryEnabled()) {
-			getServer().getPluginManager().registerEvents(new MercuryListener(), this);
-		}
-		MercuryAPI.addChannels("Duties");
 	}
 }

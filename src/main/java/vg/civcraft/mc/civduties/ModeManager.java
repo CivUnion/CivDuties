@@ -11,21 +11,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import net.minecraft.server.v1_10_R1.NBTCompressedStreamTools;
-import net.minecraft.server.v1_10_R1.NBTTagCompound;
-import net.minecraft.server.v1_10_R1.NBTTagList;
-import vg.civcraft.mc.bettershards.BetterShardsAPI;
-import vg.civcraft.mc.bettershards.events.PlayerChangeServerReason;
-import vg.civcraft.mc.bettershards.misc.PlayerStillDeadException;
+import net.minecraft.server.v1_12_R1.NBTCompressedStreamTools;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagList;
 import vg.civcraft.mc.civduties.configuration.Command;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
 import vg.civcraft.mc.civduties.configuration.Tier;
 import vg.civcraft.mc.civduties.database.DatabaseManager;
 import vg.civcraft.mc.civduties.external.VaultManager;
-import vg.civcraft.mc.mercury.MercuryAPI;
 
 public class ModeManager {
 	private DatabaseManager db;
@@ -53,7 +49,7 @@ public class ModeManager {
 	public boolean enableDutyMode(Player player, Tier tier){
 		NBTTagCompound nbttagcompound = new NBTTagCompound();
 		CraftPlayer cPlayer = (CraftPlayer) player;
-		cPlayer.getHandle().e(nbttagcompound);
+		cPlayer.getHandle().save(nbttagcompound);
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
 			NBTCompressedStreamTools.a(nbttagcompound, output);
@@ -63,10 +59,6 @@ public class ModeManager {
 			return false;
 		}
 		String serverName = Bukkit.getServerName();
-		if(CivDuties.getInstance().isMercuryEnabled()){
-			serverName = MercuryAPI.serverName();
-		}
-		
 		db.savePlayerData(player.getUniqueId(), output, serverName, tier.getName());
 		
 		vaultManager.addPermissionsToPlayer(player, tier.getTemporaryPermissions());
@@ -88,27 +80,6 @@ public class ModeManager {
 			return false;
 		}
 		
-		if(CivDuties.getInstance().isBetterShardsEnabled() && CivDuties.getInstance().isMercuryEnabled()){
-			String serverName = db.getPlayerData(player.getUniqueId()).getServerName();
-			if(!MercuryAPI.serverName().equals(serverName)){
-				/**
-				 * We want to remove the permissions here before sending the
-				 * player to the new server to ensure the cache isn't been
-				 * removed by the login listener on the new server before the
-				 * quit event on the current server is fired.
-				 */
-				vaultManager.removePermissionsFromPlayer(player, tier.getTemporaryPermissions());
-				vaultManager.removePlayerFromGroups(player, tier.getTemporaryGroups());
-				MercuryAPI.sendMessage(serverName, "removeFromDuty|"+ player.getUniqueId().toString(), "Duties");
-				try {
-					BetterShardsAPI.connectPlayer(player, serverName, PlayerChangeServerReason.PLUGIN);
-				} catch (PlayerStillDeadException e) {
-					return false;
-				}
-				return true;
-			}
-		}
-		
 		ByteArrayInputStream input = db.getPlayerData(player.getUniqueId()).getData();
 		try {
 			NBTTagCompound nbttagcompound = NBTCompressedStreamTools.a(input);
@@ -116,7 +87,7 @@ public class ModeManager {
 			player.setGameMode(getGameModeByVaule(nbttagcompound.getInt("playerGameType")));
 			//Teleport the players using the bukkit api to avoid triggering nocheat movement detection
 			NBTTagList location = nbttagcompound.getList("Pos", 6);
-			player.teleport(new Location(player.getWorld(), location.e(0), location.e(1), location.e(2)));
+			player.teleport(new Location(player.getWorld(), location.c(0), location.c(1), location.c(2)));
 			CraftPlayer cPlayer = (CraftPlayer) player;
 			cPlayer.getHandle().f(nbttagcompound);
 		} catch (IOException e) {
@@ -125,9 +96,6 @@ public class ModeManager {
 		}
 		
 		db.removePlayerData(player.getUniqueId());
-		if(CivDuties.getInstance().isMercuryEnabled()){
-			MercuryAPI.sendGlobalMessage("cache|clear|"+ player.getUniqueId().toString(), "Duties");
-		}
 		
 		for(Command command: tier.getCommands()){
 			if(command.getTiming() == Timing.DISABLE){

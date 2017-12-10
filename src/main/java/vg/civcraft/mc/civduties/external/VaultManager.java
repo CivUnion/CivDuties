@@ -6,6 +6,7 @@ import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
+
 import net.milkbowl.vault.permission.Permission;
 import vg.civcraft.mc.civduties.CivDuties;
 

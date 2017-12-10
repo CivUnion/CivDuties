@@ -4,9 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import vg.civcraft.mc.civduties.CivDuties;
-import vg.civcraft.mc.mercury.MercuryAPI;
-
 public class Command {
 	private String syntax;
 	private Timing timing;
@@ -58,7 +55,7 @@ public class Command {
 		String parsedCommand = (syntax.charAt(0) == '/' ? syntax.substring(1) : syntax)
 				.replaceAll("%PLAYER_NAME%", player.getName())
 				.replaceAll("%PLAYER_GAMEMODE%", player.getGameMode().toString())
-				.replaceAll("%PLAYER_SERVER%", CivDuties.getInstance().isMercuryEnabled() ? MercuryAPI.serverName() : Bukkit.getServerName());
+				.replaceAll("%PLAYER_SERVER%", Bukkit.getServerName());
 		CommandSender sender = player;
 		if(executor == Executor.CONSOLE){
 			sender = Bukkit.getConsoleSender();

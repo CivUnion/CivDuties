@@ -11,9 +11,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import vg.civcraft.mc.civduties.CivDuties;
 import vg.civcraft.mc.civduties.ModeManager;
 import vg.civcraft.mc.civduties.configuration.Command;
+import vg.civcraft.mc.civduties.configuration.Command.Timing;
 import vg.civcraft.mc.civduties.configuration.ConfigManager;
 import vg.civcraft.mc.civduties.configuration.Tier;
-import vg.civcraft.mc.civduties.configuration.Command.Timing;
 import vg.civcraft.mc.civduties.database.DatabaseManager;
 import vg.civcraft.mc.civduties.external.VaultManager;
 
@@ -50,11 +50,6 @@ public class PlayerListener implements Listener {
 		Player player = event.getPlayer(); 
 		if(modeManager.isInDuty(player)){
 			Tier tier = config.getTier(db.getPlayerData(player.getUniqueId()).getTierName());
-			if (MercuryListener.shouldRemoveFromDuty(player.getUniqueId())) {
-				modeManager.disableDutyMode(player, tier);
-				MercuryListener.removePlayerFromMap(player.getUniqueId());
-				return;
-			}
 			for(Command command: tier.getCommands()){
 				if(command.getTiming() == Timing.LOGIN){
 					command.execute(player);
