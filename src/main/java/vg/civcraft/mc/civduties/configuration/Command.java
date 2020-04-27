@@ -55,7 +55,7 @@ public class Command {
 		String parsedCommand = (syntax.charAt(0) == '/' ? syntax.substring(1) : syntax)
 				.replaceAll("%PLAYER_NAME%", player.getName())
 				.replaceAll("%PLAYER_GAMEMODE%", player.getGameMode().toString())
-				.replaceAll("%PLAYER_SERVER%", Bukkit.getServerName());
+				.replaceAll("%PLAYER_SERVER%", Bukkit.getServer().getName());
 		CommandSender sender = player;
 		if(executor == Executor.CONSOLE){
 			sender = Bukkit.getConsoleSender();

@@ -23,6 +23,7 @@ public class Duty extends PlayerCommand{
 		setArguments(0, 2);
 	}
 
+	@Override
 	public boolean execute(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("No.");
@@ -36,6 +37,9 @@ public class Duty extends PlayerCommand{
 				tier = CivDuties.getInstance().getConfigManager().getTier(player);
 			} else {
 				tier = CivDuties.getInstance().getConfigManager().getTier(args[0]);
+				if (!player.hasPermission(tier.getPermission())) {
+					tier = null;
+				}
 			}
 
 			if (tier == null) {
@@ -59,6 +63,7 @@ public class Duty extends PlayerCommand{
 		return true;
 	}
 
+	@Override
 	public List<String> tabComplete(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("No.");

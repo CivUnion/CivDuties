@@ -1,70 +1,35 @@
 package vg.civcraft.mc.civduties.configuration;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import vg.civcraft.mc.civduties.CivDuties;
 import vg.civcraft.mc.civduties.configuration.Command.Executor;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
+import vg.civcraft.mc.civmodcore.CoreConfigManager;
+import vg.civcraft.mc.civmodcore.dao.ManagedDatasource;
 
-public class ConfigManager {
-	private FileConfiguration config;
-	private String hostName;
-	private int port;
-	private String dbName;
-	private String userName;
-	private String password;
+public class DutiesConfigManager extends CoreConfigManager {
+	private ManagedDatasource db;
 	private List<Tier> tiers;
 	
-	public ConfigManager(FileConfiguration config){
-		this.config = config;
-		createConfig();
-		praseConfig();
+	public DutiesConfigManager(CivDuties plugin){
+		super(plugin);
 	}
 	
-	private void createConfig() {
-        try {
-            if (!CivDuties.getInstance().getDataFolder().exists()) {
-            	CivDuties.getInstance().getDataFolder().mkdirs();
-            }
-            File file = new File(CivDuties.getInstance().getDataFolder(), "config.yml");
-            if (!file.exists() || file.length() == 0) {
-            	CivDuties.getInstance().getLogger().info("Config.yml not found, creating!");
-            	CivDuties.getInstance().saveResource("config.yml", true);
-            } else {
-                CivDuties.getInstance().getLogger().info("Config.yml found, loading!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-
-    }
-	
-	private void praseConfig(){
-		hostName = config.getString("mysql.hostname");
-		port = config.getInt("mysql.port");
-		dbName = config.getString("mysql.dbname");
-		userName = config.getString("mysql.username");
-		password = config.getString("mysql.password");
-		praseTiers(config.getConfigurationSection("tiers"));
-	}
-	
-	private void praseTiers(ConfigurationSection config){
-		tiers = new ArrayList<Tier>();
+	private void parseTiers(ConfigurationSection config){
+		tiers = new ArrayList<>();
 		for (String key : config.getKeys(false)) {
 			if (config.getConfigurationSection(key) == null) {
 				CivDuties.getInstance().warning("Found invalid section that should not exist at " + config.getCurrentPath() + key);
 				continue;
 			}
-			Tier tier = praseTier(key, config.getConfigurationSection(key));
+			Tier tier = parseTier(key, config.getConfigurationSection(key));
 			if (tier == null) {
 				CivDuties.getInstance().warning(String.format("Tier %s unable to be added.", key));
 			} else {
@@ -73,11 +38,11 @@ public class ConfigManager {
 		}
 	}
 	
-	private Tier praseTier(String name, ConfigurationSection config){
+	private Tier parseTier(String name, ConfigurationSection config){
 		String permission = config.getString("permission");
 		int priority = config.getInt("priority");
-		List<Command> commands = praseCommands(config.getConfigurationSection("commands"));
-		Map<String, Boolean> temporaryPermissions = new HashMap<String, Boolean>();
+		List<Command> commands = parseCommands(config.getConfigurationSection("commands"));
+		Map<String, Boolean> temporaryPermissions = new HashMap<>();
 		for(String temporaryPermission : config.getStringList("temporary.permissions")){
 			String[] array = temporaryPermission.split(":");
 			if(array.length > 1){
@@ -86,15 +51,15 @@ public class ConfigManager {
 			}
 			temporaryPermissions.put(array[0], true);
 		}
-		List<String> temporaryGroups = config.getStringList("temporary.groups") == null ? new ArrayList<String>() : config.getStringList("temporary.groups");
+		List<String> temporaryGroups = config.getStringList("temporary.groups");
 		boolean deathDrops = config.getBoolean("disable_death_drops");
 		boolean combattagBlock = config.getBoolean("enable_combattag_block");
 		return new Tier(name, priority, permission, commands, temporaryPermissions, temporaryGroups, deathDrops, combattagBlock);
 	}
 	
-	private List<Command> praseCommands(ConfigurationSection config){
+	private List<Command> parseCommands(ConfigurationSection config){
 		if(config == null){
-			return new ArrayList<Command>();
+			return new ArrayList<>();
 		}
 		List<Command> commands = new ArrayList<>();
 		for (String key : config.getKeys(false)) {
@@ -102,7 +67,7 @@ public class ConfigManager {
 				CivDuties.getInstance().warning("Found invalid section that should not exist at " + config.getCurrentPath() + key);
 				continue;
 			}
-			Command command = praseCommand(config.getConfigurationSection(key));
+			Command command = parseCommand(config.getConfigurationSection(key));
 			if (command == null) {
 				CivDuties.getInstance().warning(String.format("Tier %s unable to be added.", key));
 			} else {
@@ -112,7 +77,7 @@ public class ConfigManager {
 		return commands;
 	}
 	
-	private Command praseCommand(ConfigurationSection config){
+	private Command parseCommand(ConfigurationSection config){
 		String syntax = config.getString("syntax");
 		Timing timing = Timing.valueOf(config.getString("timing"));
 		Executor executor = Executor.valueOf(config.getString("executor"));
@@ -123,7 +88,6 @@ public class ConfigManager {
 		Tier tier = null;
 		int maxPriority = Integer.MIN_VALUE;
 		for(Tier t : tiers){
-			System.out.println(t.getPermission());
 			if((t.getPermission() == null || player.hasPermission(t.getPermission())) && (tier == null || t.getPriority() > maxPriority)){
 				tier = t;
 				maxPriority = t.getPriority();
@@ -142,7 +106,7 @@ public class ConfigManager {
 	}
 	
 	public List<String> getTiersNames(Player player){
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 		for(Tier tier : tiers){
 			if(tier.getPermission() == null || player.hasPermission(tier.getPermission())){
 				names.add(tier.getName());
@@ -151,25 +115,15 @@ public class ConfigManager {
 		return names;
 	}
 	
-	public String getHostName(){
-		return hostName;
+	public ManagedDatasource getDatabase(){
+		return db;
 	}
-	
-	public int getPort(){
-		return port;
-	}
-	
-	public String getDBName(){
-		return dbName;
-	}
-	
-	public String getUserName(){
-		return userName;
-	}
-	
-	public String getPassword(){
-		return password;
-	}
-	
+
+	@Override
+	protected boolean parseInternal(ConfigurationSection config) {
+		parseTiers(config.getConfigurationSection("tiers"));
+		db = (ManagedDatasource) config.get("database");
+		return true;
+	}	
 
 }

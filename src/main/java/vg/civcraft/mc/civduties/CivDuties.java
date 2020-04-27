@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import vg.civcraft.mc.civduties.command.CivDutiesCommandHandler;
 import vg.civcraft.mc.civduties.configuration.Command;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
-import vg.civcraft.mc.civduties.configuration.ConfigManager;
+import vg.civcraft.mc.civduties.configuration.DutiesConfigManager;
 import vg.civcraft.mc.civduties.configuration.Tier;
 import vg.civcraft.mc.civduties.database.DatabaseManager;
 import vg.civcraft.mc.civduties.external.VaultManager;
@@ -15,7 +15,7 @@ import vg.civcraft.mc.civmodcore.ACivMod;
 
 public class CivDuties extends ACivMod {
 	private static CivDuties pluginInstance;
-	private ConfigManager config;
+	private DutiesConfigManager config;
 	private DatabaseManager db;
 	private ModeManager modeManager;
 	private VaultManager vaultManager;
@@ -24,14 +24,17 @@ public class CivDuties extends ACivMod {
 		pluginInstance = this;
 	}
 
-	protected String getPluginName() {
-		return "CivDuties";
-	}
-
+	@Override
 	public void onEnable() {
 		super.onEnable();
-		config = new ConfigManager(this.getConfig());
-		db = new DatabaseManager();
+		config = new DutiesConfigManager(this);
+		config.parse();
+		if (config.getDatabase() == null) {
+			getLogger().severe("Invalid database credentials, shutting down");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
+		db = new DatabaseManager(config.getDatabase());
 		vaultManager = new VaultManager();
 		modeManager = new ModeManager();
 		CivDutiesCommandHandler commandHandler = new CivDutiesCommandHandler();
@@ -40,6 +43,7 @@ public class CivDuties extends ACivMod {
 		registerListeners();
 	}
 
+	@Override
 	public void onDisable() {
 		for(Player player : Bukkit.getOnlinePlayers()){
 			if(modeManager.isInDuty(player)){
@@ -59,7 +63,7 @@ public class CivDuties extends ACivMod {
 		return pluginInstance;
 	}
 
-	public ConfigManager getConfigManager() {
+	public DutiesConfigManager getConfigManager() {
 		return config;
 	}
 

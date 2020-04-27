@@ -1,20 +1,20 @@
 package vg.civcraft.mc.civduties.database;
 
-import java.io.ByteArrayInputStream;
+import vg.civcraft.mc.civmodcore.serialization.NBTCompound;
 
 public class PlayerData {
-	private ByteArrayInputStream data;
+	private NBTCompound data;
 	private String serverName;
 	private String tierName;
 	
-	public PlayerData(ByteArrayInputStream data, String serverName, String tierName) {
+	public PlayerData(NBTCompound data, String serverName, String tierName) {
 		super();
 		this.data = data;
 		this.serverName = serverName;
 		this.tierName = tierName;
 	}
 
-	public ByteArrayInputStream getData() {
+	public NBTCompound getData() {
 		return data;
 	}
 

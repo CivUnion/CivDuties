@@ -12,7 +12,7 @@ import vg.civcraft.mc.civduties.CivDuties;
 import vg.civcraft.mc.civduties.ModeManager;
 import vg.civcraft.mc.civduties.configuration.Command;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
-import vg.civcraft.mc.civduties.configuration.ConfigManager;
+import vg.civcraft.mc.civduties.configuration.DutiesConfigManager;
 import vg.civcraft.mc.civduties.configuration.Tier;
 import vg.civcraft.mc.civduties.database.DatabaseManager;
 import vg.civcraft.mc.civduties.external.VaultManager;
@@ -20,7 +20,7 @@ import vg.civcraft.mc.civduties.external.VaultManager;
 public class PlayerListener implements Listener {
 	private ModeManager modeManager;
 	private DatabaseManager db;
-	private ConfigManager config;
+	private DutiesConfigManager config;
 	private VaultManager vaultManager;
 	
 	public PlayerListener() {
