@@ -3,6 +3,7 @@ main: vg.civcraft.mc.civduties.CivDuties
 version: ${project.version}
 depend: [CivModCore]
 softdepend: [Vault]
+api-version: 1.14
 commands:
    duty:
       permission: civduties.duty
