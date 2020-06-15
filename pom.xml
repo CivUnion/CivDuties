@@ -2,47 +2,18 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>com.github.civclassic</groupId>
+		<artifactId>civclassic-parent</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
 	<groupId>vg.civcraft.mc</groupId>
 	<artifactId>CivDuties</artifactId>
 	<version>1.2.0</version>
 	<packaging>jar</packaging>
 	<name>CivDuties</name>
 	<url>https://github.com/Civclassic/CivDuties</url>
-
-	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.1</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-				</configuration>
-			</plugin>
-		</plugins>
-
-		<resources>
-			<resource>
-				<directory>${basedir}/src/main/resources</directory>
-				<includes>
-					<include>*.yml</include>
-				</includes>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-	</build>
 
 	<dependencies>
 		<dependency>
@@ -54,7 +25,7 @@
 		<dependency>
 			<groupId>vg.civcraft.mc.civmodcore</groupId>
 			<artifactId>CivModCore</artifactId>
-			<version>1.7.8</version>
+			<version>1.7.9</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -68,19 +39,10 @@
             <artifactId>CombatTagPlus</artifactId>
             <version>1.3.2-SNAPSHOT</version>
             <scope>provided</scope>
-            <exclusions>
-            	<exclusion>
-            		<artifactId>metrics-lite</artifactId>
-            		<groupId>org.mcstats.bukkit</groupId>
-            	</exclusion>
-            </exclusions>
         </dependency>
 	</dependencies>
+	
 	<repositories>
-		<repository>
-			<id>Spigot-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-		</repository>
 		<repository>
 			<id>CivCraft-repo</id>
 			<url>http://build.devotedmc.com/plugin/repository/everything/</url>
