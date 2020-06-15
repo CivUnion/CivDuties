@@ -44,8 +44,8 @@
 	
 	<repositories>
 		<repository>
-			<id>CivCraft-repo</id>
-			<url>http://build.devotedmc.com/plugin/repository/everything/</url>
+			<id>civ-jenkins</id>
+			<url>https://repo.civclassic.com/repository/internal/</url>
 		</repository>
 		<repository>
 			<id>Vault-repo</id>
