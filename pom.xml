@@ -10,7 +10,7 @@
 
 	<groupId>vg.civcraft.mc</groupId>
 	<artifactId>CivDuties</artifactId>
-	<version>1.2.0</version>
+	<version>1.3.0</version>
 	<packaging>jar</packaging>
 	<name>CivDuties</name>
 	<url>https://github.com/Civclassic/CivDuties</url>
@@ -19,13 +19,13 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>
-			<version>1.14.4-R0.1-SNAPSHOT</version>
+			<version>1.16.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>vg.civcraft.mc.civmodcore</groupId>
 			<artifactId>CivModCore</artifactId>
-			<version>1.7.9</version>
+			<version>1.8.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
