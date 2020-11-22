@@ -71,13 +71,15 @@ public class ModeManager {
 		NBTCompound input = db.getPlayerData(player.getUniqueId()).getData();
 		// Inform the client the gamemode was changed to fix graphical issues on the
 		// client side
-		player.setGameMode(getGameModeByValue(input.getInteger("playerGameType")));
 		// Teleport the players using the bukkit api to avoid triggering nocheat
 		// movement detection
 		double [] location = input.getDoubleArray("Pos");
 		UUID worldUUID = UUID.fromString(input.getString("worldUUID"));
+		Location targetLocation = new Location(Bukkit.getWorld(worldUUID), location [0], location[1], location[2]);
+		player.teleport(targetLocation);
+		player.setGameMode(getGameModeByValue(input.getInteger("playerGameType")));
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CivDuties.getInstance(), () -> {
-			player.teleport(new Location(Bukkit.getWorld(worldUUID), location [0], location[1], location[2]));
+			player.teleport(targetLocation);
 		}, 3L);
 		CraftPlayer cPlayer = (CraftPlayer) player;
 		cPlayer.getHandle().loadData(input.getRAW());
