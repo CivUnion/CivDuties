@@ -9,6 +9,7 @@ import vg.civcraft.mc.civduties.configuration.Command.Timing;
 import vg.civcraft.mc.civduties.configuration.DutiesConfigManager;
 import vg.civcraft.mc.civduties.configuration.Tier;
 import vg.civcraft.mc.civduties.database.DatabaseManager;
+import vg.civcraft.mc.civduties.external.CombatTagHandler;
 import vg.civcraft.mc.civduties.external.VaultManager;
 import vg.civcraft.mc.civduties.listeners.PlayerListener;
 import vg.civcraft.mc.civmodcore.ACivMod;
@@ -90,5 +91,8 @@ public class CivDuties extends ACivMod {
 
 	private void registerListeners() {
 		getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+		if (isCombatTagPlusEnabled()) {
+			getServer().getPluginManager().registerEvents(new CombatTagHandler(), this);
+		}
 	}
 }
