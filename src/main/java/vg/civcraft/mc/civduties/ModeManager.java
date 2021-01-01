@@ -8,10 +8,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import net.minecraft.server.v1_16_R1.NBTTagCompound;
+import net.minecraft.server.v1_16_R3.NBTTagCompound;
 import vg.civcraft.mc.civduties.configuration.Command;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
 import vg.civcraft.mc.civduties.configuration.Tier;
