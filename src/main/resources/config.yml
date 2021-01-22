@@ -36,14 +36,14 @@
 #enable_combattag_block prevent the player from entering duty mode while combattaged. Uses CombatTagPlus: https://github.com/MinelinkNetwork/CombatTagPlus
 
 tiers:
-    default:
-       priority: 0
-       disable_death_drops: true
-       enable_combattag_block: true
+  default:
+    priority: 0
+    disable_death_drops: true
+    enable_combattag_block: true
 
 mysql:
- hostname: 'localhost'
- port: 3306
- dbname: 'bukkit'
- username: 'bukkit'
- password: ''
+  hostname: 'localhost'
+  port: 3306
+  dbname: 'bukkit'
+  username: 'bukkit'
+  password: ''
