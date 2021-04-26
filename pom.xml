@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>com.destroystokyo.paper</groupId>
 			<artifactId>paper</artifactId>
-			<version>1.16.4-R0.1-SNAPSHOT</version>
+			<version>1.16.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -30,9 +30,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.milkbowl.vault</groupId>
+			<groupId>com.github.MilkBowl</groupId>
 			<artifactId>VaultAPI</artifactId>
-			<version>1.6</version>
+			<version>1.7</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -49,8 +49,8 @@
 			<url>https://raw.githubusercontent.com/CivClassic/artifacts/master/</url>
 		</repository>
 		<repository>
-			<id>Vault-repo</id>
-			<url>http://nexus.hc.to/content/repositories/pub_releases/</url>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
 
