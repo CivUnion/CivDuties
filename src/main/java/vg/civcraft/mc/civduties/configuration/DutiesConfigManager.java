@@ -4,17 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-
 import vg.civcraft.mc.civduties.CivDuties;
 import vg.civcraft.mc.civduties.configuration.Command.Executor;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
-import vg.civcraft.mc.civmodcore.CoreConfigManager;
+import vg.civcraft.mc.civmodcore.config.ConfigParser;
 import vg.civcraft.mc.civmodcore.dao.ManagedDatasource;
 
-public class DutiesConfigManager extends CoreConfigManager {
+public class DutiesConfigManager extends ConfigParser {
 	private ManagedDatasource db;
 	private List<Tier> tiers;
 	

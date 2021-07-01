@@ -1,5 +1,10 @@
 package vg.civcraft.mc.civduties.command.commands;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Syntax;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -10,26 +15,15 @@ import net.minelink.ctplus.CombatTagPlus;
 import vg.civcraft.mc.civduties.CivDuties;
 import vg.civcraft.mc.civduties.ModeManager;
 import vg.civcraft.mc.civduties.configuration.Tier;
-import vg.civcraft.mc.civmodcore.command.PlayerCommand;
 
-public class Duty extends PlayerCommand{
+public class Duty extends BaseCommand {
 	private ModeManager modeManager = CivDuties.getInstance().getModeManager();
 
-	public Duty(String name) {
-		super(name);
-		setIdentifier("duty");
-		setDescription("Allow you to enter duty mode");
-		setUsage("/duty");
-		setArguments(0, 2);
-	}
-
-	@Override
-	public boolean execute(CommandSender sender, String[] args) {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("No.");
-			return true;
-		}
-		Player player = (Player) sender;
+	@CommandAlias("duty")
+	@Syntax("")
+	@Description("Allows you to enter duty mode")
+	@CommandPermission("civduties.duty")
+	public void execute(Player player, String[] args) {
 		Tier tier = null;
 
 		if (!modeManager.isInDuty(player)) {
@@ -44,14 +38,14 @@ public class Duty extends PlayerCommand{
 
 			if (tier == null) {
 				player.sendMessage("You don't have permission to execute this command.");
-				return true;
+				return;
 			}
 
 			if (CivDuties.getInstance().isCombatTagPlusEnabled() && tier.isCombattagBlock()
 					&& ((CombatTagPlus) Bukkit.getPluginManager().getPlugin("CombatTagPlus")).getTagManager()
 							.isTagged(player.getUniqueId())) {
 				player.sendMessage("You can't enter duty mode while combat tagged");
-				return true;
+				return;
 			}
 			modeManager.enableDutyMode(player, tier);
 		} else {
@@ -60,10 +54,8 @@ public class Duty extends PlayerCommand{
 			tier = CivDuties.getInstance().getConfigManager().getTier(tierName);
 			modeManager.disableDutyMode(player, tier);
 		}
-		return true;
 	}
 
-	@Override
 	public List<String> tabComplete(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("No.");

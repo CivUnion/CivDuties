@@ -3,21 +3,19 @@ package vg.civcraft.mc.civduties;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
 import vg.civcraft.mc.civduties.configuration.Command;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
 import vg.civcraft.mc.civduties.configuration.Tier;
 import vg.civcraft.mc.civduties.database.DatabaseManager;
 import vg.civcraft.mc.civduties.external.VaultManager;
-import vg.civcraft.mc.civmodcore.serialization.NBTCompound;
+import vg.civcraft.mc.civmodcore.nbt.NBTHelper;
 
 public class ModeManager {
 	private DatabaseManager db;
@@ -45,10 +43,9 @@ public class ModeManager {
 		NBTTagCompound nmsCompound = new NBTTagCompound();
 		CraftPlayer cPlayer = (CraftPlayer) player;
 		cPlayer.getHandle().save(nmsCompound);
-		NBTCompound compound = new NBTCompound(nmsCompound);
-		compound.setString("worldUUID", player.getWorld().getUID().toString());
+		nmsCompound.setString("worldUUID", player.getWorld().getUID().toString());
 		String serverName = Bukkit.getServer().getName();
-		db.savePlayerData(player.getUniqueId(), compound, serverName, tier.getName());
+		db.savePlayerData(player.getUniqueId(), nmsCompound, serverName, tier.getName());
 
 		vaultManager.addPermissionsToPlayer(player, tier.getTemporaryPermissions());
 		vaultManager.addPlayerToGroups(player, tier.getTemporaryGroups());
@@ -68,21 +65,21 @@ public class ModeManager {
 		if (!isInDuty(player)) {
 			return false;
 		}
-		NBTCompound input = db.getPlayerData(player.getUniqueId()).getData();
+		NBTTagCompound input = db.getPlayerData(player.getUniqueId()).getData();
 		// Inform the client the gamemode was changed to fix graphical issues on the
 		// client side
 		// Teleport the players using the bukkit api to avoid triggering nocheat
 		// movement detection
-		double [] location = input.getDoubleArray("Pos");
+		Location location = NBTHelper.locationFromNBT(input);
 		UUID worldUUID = UUID.fromString(input.getString("worldUUID"));
-		Location targetLocation = new Location(Bukkit.getWorld(worldUUID), location [0], location[1], location[2]);
+		Location targetLocation = new Location(Bukkit.getWorld(worldUUID), location.getX(), location.getY(), location.getZ());
 		player.teleport(targetLocation);
-		player.setGameMode(getGameModeByValue(input.getInteger("playerGameType")));
+		player.setGameMode(getGameModeByValue(input.getInt("playerGameType")));
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CivDuties.getInstance(), () -> {
 			player.teleport(targetLocation);
 		}, 3L);
 		CraftPlayer cPlayer = (CraftPlayer) player;
-		cPlayer.getHandle().loadData(input.getRAW());
+		cPlayer.getHandle().loadData(input);
 
 		db.removePlayerData(player.getUniqueId());
 
