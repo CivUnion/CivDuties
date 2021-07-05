@@ -9,7 +9,9 @@ import org.bukkit.entity.Player;
 import vg.civcraft.mc.civduties.CivDuties;
 import vg.civcraft.mc.civduties.configuration.Command.Executor;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
+import vg.civcraft.mc.civmodcore.ACivMod;
 import vg.civcraft.mc.civmodcore.config.ConfigParser;
+import vg.civcraft.mc.civmodcore.dao.DatabaseCredentials;
 import vg.civcraft.mc.civmodcore.dao.ManagedDatasource;
 
 public class DutiesConfigManager extends ConfigParser {
@@ -120,7 +122,7 @@ public class DutiesConfigManager extends ConfigParser {
 	@Override
 	protected boolean parseInternal(ConfigurationSection config) {
 		parseTiers(config.getConfigurationSection("tiers"));
-		db = (ManagedDatasource) config.get("database");
+		db = ManagedDatasource.construct((ACivMod) plugin, (DatabaseCredentials) config.get("database"));
 		return true;
 	}	
 

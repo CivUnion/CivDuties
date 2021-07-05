@@ -2,8 +2,6 @@ package vg.civcraft.mc.civduties;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import org.checkerframework.checker.units.qual.C;
 import vg.civcraft.mc.civduties.command.CivDutiesCommandHandler;
 import vg.civcraft.mc.civduties.configuration.Command;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
@@ -14,7 +12,6 @@ import vg.civcraft.mc.civduties.external.CombatTagHandler;
 import vg.civcraft.mc.civduties.external.VaultManager;
 import vg.civcraft.mc.civduties.listeners.PlayerListener;
 import vg.civcraft.mc.civmodcore.ACivMod;
-import vg.civcraft.mc.civmodcore.commands.CommandManager;
 
 public class CivDuties extends ACivMod {
 	private static CivDuties pluginInstance;
