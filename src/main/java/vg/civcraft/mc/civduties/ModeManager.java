@@ -16,6 +16,7 @@ import vg.civcraft.mc.civduties.configuration.Tier;
 import vg.civcraft.mc.civduties.database.DatabaseManager;
 import vg.civcraft.mc.civduties.external.VaultManager;
 import vg.civcraft.mc.civmodcore.nbt.NBTHelper;
+import vg.civcraft.mc.civmodcore.nbt.wrappers.NBTCompound;
 
 public class ModeManager {
 	private DatabaseManager db;
@@ -65,7 +66,7 @@ public class ModeManager {
 		if (!isInDuty(player)) {
 			return false;
 		}
-		NBTTagCompound input = db.getPlayerData(player.getUniqueId()).getData();
+		NBTCompound input = new NBTCompound(db.getPlayerData(player.getUniqueId()).getData());
 		// Inform the client the gamemode was changed to fix graphical issues on the
 		// client side
 		// Teleport the players using the bukkit api to avoid triggering nocheat
