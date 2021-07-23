@@ -15,7 +15,6 @@ import vg.civcraft.mc.civduties.configuration.Command.Timing;
 import vg.civcraft.mc.civduties.configuration.Tier;
 import vg.civcraft.mc.civduties.database.DatabaseManager;
 import vg.civcraft.mc.civduties.external.VaultManager;
-import vg.civcraft.mc.civmodcore.nbt.NBTHelper;
 import vg.civcraft.mc.civmodcore.nbt.wrappers.NBTCompound;
 
 public class ModeManager {
@@ -44,9 +43,11 @@ public class ModeManager {
 		NBTTagCompound nmsCompound = new NBTTagCompound();
 		CraftPlayer cPlayer = (CraftPlayer) player;
 		cPlayer.getHandle().save(nmsCompound);
-		nmsCompound.setString("worldUUID", player.getWorld().getUID().toString());
+		NBTCompound compound = new NBTCompound(nmsCompound);
+		UUID worldUUID = cPlayer.getWorld().getUID();
+		compound.setUUID("WorldUUID", worldUUID);
 		String serverName = Bukkit.getServer().getName();
-		db.savePlayerData(player.getUniqueId(), nmsCompound, serverName, tier.getName());
+		db.savePlayerData(player.getUniqueId(), compound, serverName, tier.getName());
 
 		vaultManager.addPermissionsToPlayer(player, tier.getTemporaryPermissions());
 		vaultManager.addPlayerToGroups(player, tier.getTemporaryGroups());
@@ -71,9 +72,9 @@ public class ModeManager {
 		// client side
 		// Teleport the players using the bukkit api to avoid triggering nocheat
 		// movement detection
-		Location location = NBTHelper.locationFromNBT(input);
-		UUID worldUUID = UUID.fromString(input.getString("worldUUID"));
-		Location targetLocation = new Location(Bukkit.getWorld(worldUUID), location.getX(), location.getY(), location.getZ());
+		double[] location = input.getDoubleArray("Pos");
+		UUID worldUUID = input.getUUID("WorldUUID");
+		Location targetLocation = new Location(Bukkit.getWorld(worldUUID), location[0], location[1], location[2]);
 		player.teleport(targetLocation);
 		player.setGameMode(getGameModeByValue(input.getInt("playerGameType")));
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CivDuties.getInstance(), () -> {
