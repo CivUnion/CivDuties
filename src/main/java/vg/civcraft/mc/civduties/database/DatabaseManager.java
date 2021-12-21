@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import vg.civcraft.mc.civduties.CivDuties;
 import vg.civcraft.mc.civmodcore.dao.ManagedDatasource;
 import vg.civcraft.mc.civmodcore.nbt.NBTSerialization;
@@ -32,7 +32,7 @@ public class DatabaseManager {
 						+ "serverName varchar(256) not null, tierName varchar(256) not null, primary key (uuid));");
 	}
 
-	public void savePlayerData(UUID uuid, NBTTagCompound compound, String serverName, String tierName) {
+	public void savePlayerData(UUID uuid, CompoundTag compound, String serverName, String tierName) {
 		try (Connection conn = db.getConnection();
 				PreparedStatement addPlayerData = conn.prepareStatement(
 						"insert into DutiesPlayerData(uuid, entity, serverName, tierName) values(?,?,?,?);")) {
@@ -56,7 +56,7 @@ public class DatabaseManager {
 			getPlayerData.setString(1, uuid.toString());
 			try (ResultSet rs = getPlayerData.executeQuery()) {
 				if (rs.next()) {
-					NBTTagCompound compound = NBTSerialization.fromBytes(rs.getBytes("entity"));
+					CompoundTag compound = NBTSerialization.fromBytes(rs.getBytes("entity"));
 					String server = rs.getString("serverName");
 					String tierName = rs.getString("tierName");
 					PlayerData data = new PlayerData(compound, server, tierName);

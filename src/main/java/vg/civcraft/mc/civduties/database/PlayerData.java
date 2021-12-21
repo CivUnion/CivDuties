@@ -1,20 +1,19 @@
 package vg.civcraft.mc.civduties.database;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class PlayerData {
-	private NBTTagCompound data;
+	private CompoundTag data;
 	private String serverName;
 	private String tierName;
 	
-	public PlayerData(NBTTagCompound data, String serverName, String tierName) {
-		super();
+	public PlayerData(CompoundTag data, String serverName, String tierName) {
 		this.data = data;
 		this.serverName = serverName;
 		this.tierName = tierName;
 	}
 
-	public NBTTagCompound getData() {
+	public CompoundTag getData() {
 		return data;
 	}
 

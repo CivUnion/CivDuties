@@ -3,12 +3,12 @@ package vg.civcraft.mc.civduties;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import vg.civcraft.mc.civduties.configuration.Command;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
@@ -40,7 +40,7 @@ public class ModeManager {
 	}
 
 	public boolean enableDutyMode(Player player, Tier tier) {
-		NBTTagCompound nmsCompound = new NBTTagCompound();
+		CompoundTag nmsCompound = new CompoundTag();
 		CraftPlayer cPlayer = (CraftPlayer) player;
 		cPlayer.getHandle().save(nmsCompound);
 		NBTCompound compound = new NBTCompound(nmsCompound);
@@ -81,7 +81,7 @@ public class ModeManager {
 			player.teleport(targetLocation);
 		}, 3L);
 		CraftPlayer cPlayer = (CraftPlayer) player;
-		cPlayer.getHandle().loadData(input);
+		cPlayer.getHandle().load(input);
 
 		db.removePlayerData(player.getUniqueId());
 
