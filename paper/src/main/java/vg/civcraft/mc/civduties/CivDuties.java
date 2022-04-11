@@ -2,7 +2,6 @@ package vg.civcraft.mc.civduties;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
 import vg.civcraft.mc.civduties.command.CivDutiesCommandHandler;
 import vg.civcraft.mc.civduties.configuration.Command;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
@@ -20,6 +19,7 @@ public class CivDuties extends ACivMod {
 	private DatabaseManager db;
 	private ModeManager modeManager;
 	private VaultManager vaultManager;
+	private CivDutiesCommandHandler commandHandler;
 
 	public CivDuties() {
 		pluginInstance = this;
@@ -38,9 +38,7 @@ public class CivDuties extends ACivMod {
 		db = new DatabaseManager(config.getDatabase());
 		vaultManager = new VaultManager();
 		modeManager = new ModeManager();
-		CivDutiesCommandHandler commandHandler = new CivDutiesCommandHandler();
-		setCommandHandler(commandHandler);
-		commandHandler.registerCommands();
+		commandHandler = new CivDutiesCommandHandler(this);
 		registerListeners();
 	}
 
