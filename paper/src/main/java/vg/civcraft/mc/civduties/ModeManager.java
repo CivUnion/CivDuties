@@ -47,7 +47,7 @@ public class ModeManager {
 		UUID worldUUID = cPlayer.getWorld().getUID();
 		compound.setUUID("WorldUUID", worldUUID);
 		String serverName = Bukkit.getServer().getName();
-		db.savePlayerData(player.getUniqueId(), compound, serverName, tier.getName());
+		db.savePlayerData(player.getUniqueId(), compound.getRAW(), serverName, tier.getName());
 
 		vaultManager.addPermissionsToPlayer(player, tier.getTemporaryPermissions());
 		vaultManager.addPlayerToGroups(player, tier.getTemporaryGroups());
@@ -81,7 +81,7 @@ public class ModeManager {
 			player.teleport(targetLocation);
 		}, 3L);
 		CraftPlayer cPlayer = (CraftPlayer) player;
-		cPlayer.getHandle().load(input);
+		cPlayer.getHandle().load(input.getRAW());
 
 		db.removePlayerData(player.getUniqueId());
 
