@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import vg.civcraft.mc.civduties.configuration.Command;
 import vg.civcraft.mc.civduties.configuration.Command.Timing;
@@ -42,10 +42,8 @@ public class ModeManager {
 	public boolean enableDutyMode(Player player, Tier tier) {
 		CompoundTag nmsCompound = new CompoundTag();
 		CraftPlayer cPlayer = (CraftPlayer) player;
-		cPlayer.getHandle().save(nmsCompound);
+		cPlayer.getHandle().saveWithoutId(nmsCompound);
 		NBTCompound compound = new NBTCompound(nmsCompound);
-		UUID worldUUID = cPlayer.getWorld().getUID();
-		compound.setUUID("WorldUUID", worldUUID);
 		String serverName = Bukkit.getServer().getName();
 		db.savePlayerData(player.getUniqueId(), compound.getRAW(), serverName, tier.getName());
 
@@ -73,7 +71,7 @@ public class ModeManager {
 		// Teleport the players using the bukkit api to avoid triggering nocheat
 		// movement detection
 		double[] location = input.getDoubleArray("Pos");
-		UUID worldUUID = input.getUUID("WorldUUID");
+		UUID worldUUID = new UUID(input.getLong("WorldUUIDMost"), input.getLong("WorldUUIDLeast"));
 		Location targetLocation = new Location(Bukkit.getWorld(worldUUID), location[0], location[1], location[2]);
 		player.teleport(targetLocation);
 		player.setGameMode(getGameModeByValue(input.getInt("playerGameType")));
