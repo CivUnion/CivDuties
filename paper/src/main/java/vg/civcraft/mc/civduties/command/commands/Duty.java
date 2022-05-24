@@ -4,14 +4,13 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Syntax;
 import java.util.List;
-
+import net.minelink.ctplus.CombatTagPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import net.minelink.ctplus.CombatTagPlus;
 import vg.civcraft.mc.civduties.CivDuties;
 import vg.civcraft.mc.civduties.ModeManager;
 import vg.civcraft.mc.civduties.configuration.Tier;
@@ -20,17 +19,17 @@ public class Duty extends BaseCommand {
 	private ModeManager modeManager = CivDuties.getInstance().getModeManager();
 
 	@CommandAlias("duty")
-	@Syntax("")
+	@Syntax("[player]")
 	@Description("Allows you to enter duty mode")
 	@CommandPermission("civduties.duty")
-	public void execute(Player player, String[] args) {
+	public void execute(Player player, @Optional String targetPlayer) {
 		Tier tier = null;
 
 		if (!modeManager.isInDuty(player)) {
-			if (args.length < 1) {
+			if (targetPlayer == null || targetPlayer.isEmpty()) {
 				tier = CivDuties.getInstance().getConfigManager().getTier(player);
 			} else {
-				tier = CivDuties.getInstance().getConfigManager().getTier(args[0]);
+				tier = CivDuties.getInstance().getConfigManager().getTier(targetPlayer);
 				if (!player.hasPermission(tier.getPermission())) {
 					tier = null;
 				}

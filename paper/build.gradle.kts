@@ -12,7 +12,7 @@ civGradle {
 }
 
 dependencies {
-	paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+	paperDevBundle("1.18.2-R0.1-SNAPSHOT")
 
     compileOnly("net.civmc.civmodcore:paper:2.0.0-SNAPSHOT:dev-all")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
